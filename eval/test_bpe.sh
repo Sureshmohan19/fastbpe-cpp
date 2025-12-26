@@ -8,20 +8,15 @@ TMP=tmp_bpe_test
 
 mkdir -p $TMP
 
-echo "=============================="
 echo "BPE COMPREHENSIVE TEST SUITE"
-echo "=============================="
+echo "-----------------------------"
 
-# --------------------------------------------------
 # 1. Train tokenizer
-# --------------------------------------------------
 echo "[1] Training tokenizer..."
 $BPE train "$CORPUS" "$MODEL" 5000 1
 echo "✓ Training completed"
 
-# --------------------------------------------------
 # 2. Basic encode/decode round trip
-# --------------------------------------------------
 echo "[2] Encode/decode round-trip test..."
 
 TEXT="To be, or not to be: that is the question."
@@ -36,9 +31,7 @@ if [[ "$OUT" != "$TEXT" ]]; then
 fi
 echo "✓ Round-trip passed"
 
-# --------------------------------------------------
 # 3. Determinism test
-# --------------------------------------------------
 echo "[3] Determinism test..."
 
 IDS1=$($BPE encode "$MODEL" "$TEXT")
@@ -50,9 +43,7 @@ if [[ "$IDS1" != "$IDS2" ]]; then
 fi
 echo "✓ Deterministic encoding"
 
-# --------------------------------------------------
 # 4. Empty string
-# --------------------------------------------------
 echo "[4] Empty string test..."
 
 IDS_EMPTY=$($BPE encode "$MODEL" "")
@@ -64,9 +55,7 @@ if [[ "$OUT_EMPTY" != "" ]]; then
 fi
 echo "✓ Empty string handled correctly"
 
-# --------------------------------------------------
 # 5. Whitespace & punctuation stress
-# --------------------------------------------------
 echo "[5] Whitespace & punctuation test..."
 
 TEXT2="   !!! ???   \n\t  foo   bar!!!   "
@@ -79,9 +68,7 @@ if [[ "$OUT" != "$TEXT2" ]]; then
 fi
 echo "✓ Whitespace & punctuation preserved"
 
-# --------------------------------------------------
 # 6. ASCII exhaustiveness (0–127)
-# --------------------------------------------------
 echo "[6] ASCII exhaustiveness test..."
 
 ASCII_TEXT=$(printf "%b" "$(printf '\\x%02x' {0..127})")
@@ -94,9 +81,7 @@ if [[ "$OUT" != "$ASCII_TEXT" ]]; then
 fi
 echo "✓ ASCII round-trip OK"
 
-# --------------------------------------------------
 # 7. Large input stability
-# --------------------------------------------------
 echo "[7] Large input test..."
 
 head -c 100000 "$CORPUS" > $TMP/large.txt
@@ -110,9 +95,7 @@ if [[ "$OUT" != "$TEXT" ]]; then
 fi
 echo "✓ Large input handled correctly"
 
-# --------------------------------------------------
 # 8. Corrupted model detection
-# --------------------------------------------------
 echo "[8] Corrupted model detection..."
 
 cp "$MODEL" $TMP/bad.bin
@@ -124,9 +107,7 @@ if $BPE encode $TMP/bad.bin "test" &>/dev/null; then
 fi
 echo "✓ Corrupted model correctly rejected"
 
-# --------------------------------------------------
 # 9. Re-load determinism
-# --------------------------------------------------
 echo "[9] Reload determinism..."
 
 IDS1=$($BPE encode "$MODEL" "$TEXT")
@@ -138,7 +119,5 @@ if [[ "$IDS1" != "$IDS2" ]]; then
 fi
 echo "✓ Reload determinism OK"
 
-# --------------------------------------------------
-echo "=============================="
 echo "ALL TESTS PASSED"
-echo "=============================="
+echo "----------------"
