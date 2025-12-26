@@ -1,0 +1,16 @@
+# binaries
+bin/fastbpe
+
+# models / outputs
+models/*.bin
+models/*.json
+
+# temp
+tmp/
+
+# python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
